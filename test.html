@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LifeFlow – All-in-One Life Dashboard</title>
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom Properties */
+      :root {
+        --primary-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      }
+      /* Custom Styles */
+      .gradient-bg {
+        background: var(--primary-gradient);
+      }
+      .sidebar {
+        width: 280px;
+        transition: all 0.3s ease;
+      }
+      .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+      }
+      /* Modern Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f3f4f6;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 3px;
+      }
+      /* Fade In Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease-in;
+      }
+      /* Chart & Widget Placeholder Styling */
+      .chart-placeholder,
+      .widget-placeholder {
+        background: #f9fafb;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+      /* Settings Form Styling */
+      .settings-form input,
+      .settings-form select,
+      .settings-form textarea {
+        padding: 0.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        width: 100%;
+        margin-top: 0.25rem;
+      }
+      .settings-form label {
+        font-weight: 500;
+        color: #374151;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="sidebar fixed lg:relative bg-white border-r border-gray-200 h-screen z-30 transform -translate-x-full lg:translate-x-0"
+      >
+        <!-- Brand -->
+        <div class="p-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center"
+            >
+              <i class="fas fa-heartbeat text-white"></i>
+            </div>
+            <h1
+              class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-teal-600"
+            >
+              LifeFlow
+            </h1>
+          </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="mt-6 px-3">
+          <div class="space-y-1">
+            <a
+              href="#dashboard"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="#tasks"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-tasks"></i>
+              <span>Task Manager</span>
+            </a>
+            <a
+              href="#finance"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-dollar-sign"></i>
+              <span>Finance Tracker</span>
+            </a>
+            <a
+              href="#habit"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-running"></i>
+              <span>Habit &amp; Fitness</span>
+            </a>
+            <a
+              href="#analytics"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-chart-line"></i>
+              <span>Analytics</span>
+            </a>
+            <a
+              href="#calendar"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-calendar-alt"></i>
+              <span>Calendar</span>
+            </a>
+            <a
+              href="#goals"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-bullseye"></i>
+              <span>Goals</span>
+            </a>
+            <a
+              href="#projects"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-folder-open"></i>
+              <span>Projects</span>
+            </a>
+            <a
+              href="#notes"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-sticky-note"></i>
+              <span>Notes</span>
+            </a>
+            <a
+              href="#settings"
+              class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50"
+            >
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </nav>
+        <!-- User Menu -->
+        <div class="absolute bottom-0 w-full p-4 border-t">
+          <div class="flex items-center gap-3">
+            <img
+              src="https://via.placeholder.com/32"
+              class="w-8 h-8 rounded-full"
+              alt="User avatar"
+            />
+            <div class="flex-1">
+              <h4 class="text-sm font-medium">Alex Morgan</h4>
+              <p class="text-xs text-gray-500">Life Enthusiast</p>
+            </div>
+            <button class="p-1 hover:bg-gray-100 rounded">
+              <i class="fas fa-cog text-gray-500"></i>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header
+          class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-4">
+            <!-- Mobile Sidebar Toggle -->
+            <button class="p-2 lg:hidden" id="sidebarToggle">
+              <i class="fas fa-bars text-gray-600"></i>
+            </button>
+            <!-- Search -->
+            <div class="relative max-w-md w-full">
+              <i
+                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              ></i>
+              <input
+                type="text"
+                placeholder="Search tasks, finances, habits..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="flex items-center gap-4">
+            <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+              <i class="fas fa-bell text-gray-600"></i>
+              <span
+                class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"
+              ></span>
+            </button>
+            <button
+              class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg gradient-bg hover:opacity-90"
+            >
+              <i class="fas fa-plus"></i>
+              <span>New Entry</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Dynamic Content Container -->
+        <main id="mainContent" class="p-6 flex-1 overflow-y-auto"></main>
+      </div>
+    </div>
+
+    <!-- JavaScript for Routing and Module Functionality -->
+    <script>
+      /* ------------------------------------
+       Sidebar Toggle for Mobile
+    ------------------------------------ */
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document
+            .querySelector(".sidebar")
+            .classList.toggle("-translate-x-full");
+        });
+
+      /* ------------------------------------
+       Page Templates (Placeholder Content)
+    ------------------------------------ */
+      const pages = {
+        dashboard: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to LifeFlow</h2>
+          <p class="mb-6 text-gray-600">
+            Your all-in-one dashboard to manage daily tasks, finances, habits, fitness, and more.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Summary Cards -->
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-lg font-bold mb-1">Tasks</h3>
+              <p class="text-sm text-gray-500">12 pending, 34 completed</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-lg font-bold mb-1">Finances</h3>
+              <p class="text-sm text-gray-500">Spent $1,250 this month</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-lg font-bold mb-1">Habits</h3>
+              <p class="text-sm text-gray-500">Streak: 7 days</p>
+            </div>
+          </div>
+          <!-- Placeholder Chart Section -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-3">Monthly Overview</h3>
+            <div class="chart-placeholder">
+              [Chart Placeholder: Integrate Recharts or Chart.js here]
+            </div>
+          </div>
+          <!-- Quick Stats Section -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-lg font-bold">Daily Focus</h3>
+              <p class="text-sm text-gray-500">3 important tasks today</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-lg font-bold">Fitness</h3>
+              <p class="text-sm text-gray-500">Burned 500 calories so far</p>
+            </div>
+          </div>
+        </div>
+      `,
+        tasks: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Task Manager</h2>
+          <p class="text-gray-600 mb-4">Add, edit, and delete your daily tasks.</p>
+          <!-- Task Creation Form -->
+          <div class="mb-6">
+            <form id="taskForm" class="flex flex-col gap-4">
+              <input type="text" id="taskTitle" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Task title" required>
+              <textarea id="taskDesc" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Task description" required></textarea>
+              <input type="date" id="taskDue" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" required>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                <i class="fas fa-plus"></i> Add Task
+              </button>
+            </form>
+          </div>
+          <!-- Task List -->
+          <div id="taskList" class="space-y-4">
+            <p class="text-gray-500">No tasks added yet.</p>
+          </div>
+        </div>
+      `,
+        finance: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Finance Tracker</h2>
+          <p class="text-gray-600 mb-4">Log your income and expenses and view monthly spending charts.</p>
+          <!-- Finance Entry Form -->
+          <div class="mb-6">
+            <form id="financeForm" class="flex flex-col gap-4">
+              <input type="number" id="financeAmount" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Amount" required>
+              <select id="financeType" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" required>
+                <option value="">Select Type</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+              <input type="text" id="financeCategory" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Category (e.g., Food, Transport)" required>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                <i class="fas fa-plus"></i> Add Entry
+              </button>
+            </form>
+          </div>
+          <!-- Finance Summary -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+            <h3 class="text-xl font-bold mb-2">Monthly Spending Summary</h3>
+            <div class="chart-placeholder mb-4">
+              [Chart Placeholder: Pie/Bar Chart]
+            </div>
+            <button class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+              <i class="fas fa-download"></i> Export CSV
+            </button>
+          </div>
+        </div>
+      `,
+        habit: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Habit &amp; Fitness Tracker</h2>
+          <p class="text-gray-600 mb-4">Track your habits, log workouts, and monitor your progress.</p>
+          <!-- Habit Creation Form -->
+          <div class="mb-6">
+            <form id="habitForm" class="flex flex-col gap-4">
+              <input type="text" id="habitName" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Habit name (e.g., Drink water 8x/day)" required>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                <i class="fas fa-plus"></i> Add Habit
+              </button>
+            </form>
+          </div>
+          <!-- Habit Calendar / Streak -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover mb-6">
+            <h3 class="text-xl font-bold mb-2">Habit Calendar</h3>
+            <div class="chart-placeholder">
+              [Calendar &amp; Streak Counter Placeholder]
+            </div>
+          </div>
+          <!-- Workout Logging -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+            <h3 class="text-xl font-bold mb-2">Workout Log</h3>
+            <p class="text-gray-500">Log your workouts (type, duration, notes).</p>
+            <button class="mt-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+              <i class="fas fa-dumbbell"></i> Log Workout
+            </button>
+          </div>
+        </div>
+      `,
+        analytics: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Analytics</h2>
+          <p class="text-gray-600 mb-4">View charts and statistics about your tasks, finances, and habits.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-xl font-bold mb-2">Task Completion</h3>
+              <div class="chart-placeholder">
+                [Line Chart Placeholder]
+              </div>
+            </div>
+            <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+              <h3 class="text-xl font-bold mb-2">Spending Trends</h3>
+              <div class="chart-placeholder">
+                [Bar/Pie Chart Placeholder]
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+        calendar: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Calendar</h2>
+          <p class="text-gray-600 mb-4">Plan your days with our integrated calendar view.</p>
+          <div id="calendarContainer" class="grid grid-cols-7 gap-2">
+            <!-- Calendar days will be generated here -->
+          </div>
+        </div>
+      `,
+        goals: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Goals</h2>
+          <p class="text-gray-600 mb-4">Set, track, and achieve your personal and professional goals.</p>
+          <!-- Goal Creation Form -->
+          <div class="mb-6">
+            <form id="goalsForm" class="flex flex-col gap-4">
+              <input type="text" id="goalTitle" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Goal title" required>
+              <textarea id="goalDesc" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Goal description" required></textarea>
+              <input type="date" id="goalDue" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" required>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                <i class="fas fa-bullseye"></i> Add Goal
+              </button>
+            </form>
+          </div>
+          <!-- Goals List -->
+          <div id="goalsList" class="space-y-4">
+            <p class="text-gray-500">No goals set yet.</p>
+          </div>
+        </div>
+      `,
+        projects: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Projects</h2>
+          <p class="text-gray-600 mb-4">Manage your ongoing projects and track progress.</p>
+          <!-- Projects List -->
+          <div id="projectsList" class="space-y-4">
+            <p class="text-gray-500">No projects available yet.</p>
+          </div>
+        </div>
+      `,
+        notes: `
+        <div class="animate-fade-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Notes</h2>
+          <p class="text-gray-600 mb-4">Keep track of your ideas, meeting notes, and reminders.</p>
+          <!-- Note Creation Form -->
+          <div class="mb-6">
+            <form id="notesForm" class="flex flex-col gap-4">
+              <input type="text" id="noteTitle" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Note title" required>
+              <textarea id="noteContent" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none" placeholder="Note content" required></textarea>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                <i class="fas fa-sticky-note"></i> Add Note
+              </button>
+            </form>
+          </div>
+          <!-- Notes List -->
+          <div id="notesList" class="space-y-4">
+            <p class="text-gray-500">No notes added yet.</p>
+          </div>
+        </div>
+      `,
+        settings: `
+        <div class="animate-fade-in space-y-8">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Settings</h2>
+          <p class="text-gray-600 mb-4">Customize your LifeFlow dashboard settings below.</p>
+          
+          <!-- Profile Settings -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+            <h3 class="text-xl font-bold mb-4">Profile Settings</h3>
+            <form id="profileSettingsForm" class="settings-form space-y-4">
+              <div>
+                <label for="profileName">Name</label>
+                <input type="text" id="profileName" placeholder="Your full name" required>
+              </div>
+              <div>
+                <label for="profileEmail">Email</label>
+                <input type="email" id="profileEmail" placeholder="you@example.com" required>
+              </div>
+              <div>
+                <label for="profileBio">Bio</label>
+                <textarea id="profileBio" placeholder="A short bio about you"></textarea>
+              </div>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                Save Profile
+              </button>
+            </form>
+          </div>
+          
+          <!-- Notification Settings -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+            <h3 class="text-xl font-bold mb-4">Notification Settings</h3>
+            <form id="notificationSettingsForm" class="settings-form space-y-4">
+              <div>
+                <label for="emailNotifications">Email Notifications</label>
+                <select id="emailNotifications" required>
+                  <option value="enabled">Enabled</option>
+                  <option value="disabled">Disabled</option>
+                </select>
+              </div>
+              <div>
+                <label for="smsNotifications">SMS Notifications</label>
+                <select id="smsNotifications" required>
+                  <option value="enabled">Enabled</option>
+                  <option value="disabled">Disabled</option>
+                </select>
+              </div>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                Save Notifications
+              </button>
+            </form>
+          </div>
+          
+          <!-- Privacy Settings -->
+          <div class="p-6 bg-white rounded-xl border border-gray-200 card-hover">
+            <h3 class="text-xl font-bold mb-4">Privacy Settings</h3>
+            <form id="privacySettingsForm" class="settings-form space-y-4">
+              <div>
+                <label for="profileVisibility">Profile Visibility</label>
+                <select id="profileVisibility" required>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <div>
+                <label for="dataSharing">Data Sharing</label>
+                <select id="dataSharing" required>
+                  <option value="enabled">Enabled</option>
+                  <option value="disabled">Disabled</option>
+                </select>
+              </div>
+              <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                Save Privacy Settings
+              </button>
+            </form>
+          </div>
+        </div>
+      `,
+      };
+
+      /* ------------------------------------
+       Dynamic Routing Function
+    ------------------------------------ */
+      function loadPage() {
+        let hash = window.location.hash.substring(1);
+        if (!hash || !pages[hash]) {
+          hash = "dashboard"; // default page
+        }
+        document.getElementById("mainContent").innerHTML = pages[hash];
+
+        // Initialize page-specific modules
+        if (hash === "tasks") initTaskModule();
+        if (hash === "finance") initFinanceModule();
+        if (hash === "habit") initHabitModule();
+        if (hash === "calendar") initCalendarModule();
+        if (hash === "goals") initGoalsModule();
+        if (hash === "notes") initNotesModule();
+        if (hash === "settings") initSettingsModule();
+      }
+
+      /* ------------------------------------
+       Task Manager Module - Basic Functionality
+    ------------------------------------ */
+      let tasks = [];
+      function initTaskModule() {
+        const form = document.getElementById("taskForm");
+        const taskList = document.getElementById("taskList");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const title = document.getElementById("taskTitle").value.trim();
+            const desc = document.getElementById("taskDesc").value.trim();
+            const due = document.getElementById("taskDue").value;
+            if (title && desc && due) {
+              tasks.push({ title, desc, due });
+              renderTasks();
+              form.reset();
+            }
+          });
+        }
+        function renderTasks() {
+          if (taskList) {
+            if (tasks.length === 0) {
+              taskList.innerHTML = `<p class="text-gray-500">No tasks added yet.</p>`;
+            } else {
+              taskList.innerHTML = tasks
+                .map(
+                  (task, index) => `
+              <div class="p-4 bg-white rounded-xl border border-gray-200 flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-bold">${task.title}</h3>
+                  <p class="text-sm text-gray-500">${task.desc}</p>
+                  <p class="text-xs text-gray-400">Due: ${task.due}</p>
+                </div>
+                <button onclick="deleteTask(${index})" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            `
+                )
+                .join("");
+            }
+          }
+        }
+        window.deleteTask = function (index) {
+          tasks.splice(index, 1);
+          renderTasks();
+        };
+      }
+
+      /* ------------------------------------
+       Finance Tracker Module - Placeholder Functions
+    ------------------------------------ */
+      function initFinanceModule() {
+        const form = document.getElementById("financeForm");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Finance entry added (placeholder)");
+            form.reset();
+          });
+        }
+      }
+
+      /* ------------------------------------
+       Habit & Fitness Module - Placeholder Functions
+    ------------------------------------ */
+      function initHabitModule() {
+        const form = document.getElementById("habitForm");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Habit added (placeholder)");
+            form.reset();
+          });
+        }
+      }
+
+      /* ------------------------------------
+       Calendar Module - Generate a Simple Calendar
+    ------------------------------------ */
+      function initCalendarModule() {
+        const calendarContainer = document.getElementById("calendarContainer");
+        if (!calendarContainer) return;
+        // For demonstration, assume a month with 30 days.
+        let html = "";
+        for (let day = 1; day <= 30; day++) {
+          html += `
+          <div class="border p-2 h-20 relative">
+            <span class="absolute top-1 left-1 text-xs font-bold">${day}</span>
+            <div class="mt-4 text-xs text-indigo-600">
+              ${day % 5 === 0 ? "Event" : ""}
+            </div>
+          </div>
+        `;
+        }
+        calendarContainer.innerHTML = html;
+      }
+
+      /* ------------------------------------
+       Goals Module - Basic Placeholder Functionality
+    ------------------------------------ */
+      let goals = [];
+      function initGoalsModule() {
+        const form = document.getElementById("goalsForm");
+        const goalsList = document.getElementById("goalsList");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const title = document.getElementById("goalTitle").value.trim();
+            const desc = document.getElementById("goalDesc").value.trim();
+            const due = document.getElementById("goalDue").value;
+            if (title && desc && due) {
+              goals.push({ title, desc, due });
+              renderGoals();
+              form.reset();
+            }
+          });
+        }
+        function renderGoals() {
+          if (goalsList) {
+            if (goals.length === 0) {
+              goalsList.innerHTML = `<p class="text-gray-500">No goals set yet.</p>`;
+            } else {
+              goalsList.innerHTML = goals
+                .map(
+                  (goal, index) => `
+              <div class="p-4 bg-white rounded-xl border border-gray-200 flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-bold">${goal.title}</h3>
+                  <p class="text-sm text-gray-500">${goal.desc}</p>
+                  <p class="text-xs text-gray-400">Due: ${goal.due}</p>
+                </div>
+                <button onclick="deleteGoal(${index})" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            `
+                )
+                .join("");
+            }
+          }
+        }
+        window.deleteGoal = function (index) {
+          goals.splice(index, 1);
+          renderGoals();
+        };
+      }
+
+      /* ------------------------------------
+       Notes Module - Basic Placeholder Functionality
+    ------------------------------------ */
+      let notes = [];
+      function initNotesModule() {
+        const form = document.getElementById("notesForm");
+        const notesList = document.getElementById("notesList");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const title = document.getElementById("noteTitle").value.trim();
+            const content = document.getElementById("noteContent").value.trim();
+            if (title && content) {
+              notes.push({ title, content });
+              renderNotes();
+              form.reset();
+            }
+          });
+        }
+        function renderNotes() {
+          if (notesList) {
+            if (notes.length === 0) {
+              notesList.innerHTML = `<p class="text-gray-500">No notes added yet.</p>`;
+            } else {
+              notesList.innerHTML = notes
+                .map(
+                  (note, index) => `
+              <div class="p-4 bg-white rounded-xl border border-gray-200 flex justify-between items-start">
+                <div>
+                  <h3 class="text-lg font-bold">${note.title}</h3>
+                  <p class="text-sm text-gray-500">${note.content}</p>
+                </div>
+                <button onclick="deleteNote(${index})" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            `
+                )
+                .join("");
+            }
+          }
+        }
+        window.deleteNote = function (index) {
+          notes.splice(index, 1);
+          renderNotes();
+        };
+      }
+
+      /* ------------------------------------
+       Settings Module - Fully Completed Placeholder
+    ------------------------------------ */
+      function initSettingsModule() {
+        // Profile Settings: simulate saving profile information
+        const profileForm = document.getElementById("profileSettingsForm");
+        if (profileForm) {
+          profileForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Profile settings saved (placeholder)");
+            profileForm.reset();
+          });
+        }
+        // Notification Settings: simulate saving notification preferences
+        const notificationForm = document.getElementById(
+          "notificationSettingsForm"
+        );
+        if (notificationForm) {
+          notificationForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Notification settings saved (placeholder)");
+            notificationForm.reset();
+          });
+        }
+        // Privacy Settings: simulate saving privacy preferences
+        const privacyForm = document.getElementById("privacySettingsForm");
+        if (privacyForm) {
+          privacyForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Privacy settings saved (placeholder)");
+            privacyForm.reset();
+          });
+        }
+      }
+
+      /* ------------------------------------
+       Event Listeners for Routing
+    ------------------------------------ */
+      window.addEventListener("hashchange", loadPage);
+      window.addEventListener("DOMContentLoaded", loadPage);
+    </script>
+  </body>
+</html>
